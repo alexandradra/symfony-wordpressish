@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <title>
+      {% block title %}Symfony From Space{% endblock %}
+    </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://use.fontawesome.com/395a9cea35.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700|Raleway:400,500,600" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/') ~ 'hover.css'}}"/>
+    <link rel="stylesheet" href="{{ asset('css/') ~ 'style.css'}}"/>
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.png') }}"/>
+  </head>
+  <body>
+    <div class="container">
+      {#{{ knp_menu_render('AppBundle:Builder:mainMenu') }}#}
+      <!-- Static navbar -->
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Menu</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ path('homepage') }}">🚀 Symfony from Space
+            </a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li>
+                <a href="{{ path('homepage') }}">{{ 'menu.home' | trans }}</a>
+              </li>
+
+              <li {% if 'homepage_blog' in app.request.attributes.get('_route') %} class="active" {% endif %}>
+                <a href="{{ path('homepage_blog') }}">{{ 'menu.blog' | trans }}</a>
+              </li>
+
+              <li {% if 'homepage_catalog' in app.request.attributes.get('_route') %} class="active" {% endif %}>
+                <a href="{{ path('homepage_catalog') }}">{{ 'menu.catalog' | trans }}</a>
+              </li>
+              <li {% if 'translation_blog' in app.request.attributes.get('_route') %} class="active" {% endif %}>
+                <a href="{{ path('translation_blog') }}"><i class="fa fa-comments" aria-hidden="true"></i></a>
+              </li>
+
+              {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                <li {% if 'create_blog' in app.request.attributes.get('_route') %} class="active" {% endif %}>
+                  <a href="{{ path('create_blog') }}">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    {{ 'menu.add' | trans }} article</a>
+                </li>
+
+                <span class="pull-right login-nav">
+                  {{ 'texte.perso' | trans({'%name%':app.user.username}) }}
+                  <a href="{{ path('fos_user_security_logout') }}">{{ 'menu.toLogOut' | trans }}</a>
+                </span>
+
+              {% else %}
+                <li {% if 'fos_user_security_login' in app.request.attributes.get('_route') %} class="active" {% endif %}>
+                  <a href="{{ path('fos_user_security_login') }}">
+                    <span class="glyphicon glyphicon-log-in"></span>
+                    Login</a>
+                </li>
+                <li {% if 'fos_user_registration_register' in app.request.attributes.get('_route') %} class="active" {% endif %}>
+                  <a href="{{ path('fos_user_registration_register') }}">
+                    <span class="glyphicon glyphicon-heart-empty"></span>
+                    Sign up</a>
+                </li>
+
+              {% endif %}
+
+            </ul>
+          </div>
+
+        </div>
+      </nav>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          {% block body %}{% endblock %}
+
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          {{ render(controller('AppBundle:Blog:footer',{nb:3})) }}
+          {{ render(controller('AppBundle:Blog:yearsArchive')) }}
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+      window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script>
+      $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
+    </script>
+    {% block javascripts %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,19 @@
+message: Helloooo
+publishedOn: Posted on
+wroteBy: Wrote by
+wroteComment: Write a comment
+deletePost: Delete post
+editPost: Edit post
+menu:
+  home: Home
+  blog: Blog
+  catalog: Catalog
+  add: Add
+  toLogOut: Log out
+footer:
+  lastPosts: Last posts
+texte:
+  helloworld: Hello world
+  ciao: Bye bye !
+  perso: Hello %name%!
+  plural: There is %count% unicorn |]1,+Inf] There is %count% unicorns

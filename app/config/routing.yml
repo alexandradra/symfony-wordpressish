@@ -1,0 +1,10 @@
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+    prefix: "/{_locale}"
+    defaults: {_locale: fr}
+    requirements:
+      _locale:  fr|en

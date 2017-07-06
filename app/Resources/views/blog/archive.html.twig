@@ -1,0 +1,37 @@
+{% extends ':blog:layout.html.twig' %}
+{% block body_layout %}
+
+    <h2 class="text-center">Archive from year <span class="btn btn-info">
+            {{year}}
+        </span></h2>
+
+    {% for article in articles %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title"><a href="{{ path('detail_blog',{id:article.id}) }}">{{article.title}}</a> <small class="pull-right">Posted on : {{article.date | date('d-m-y')}}</small></h2>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-2 text-center">
+                        {% if article.image %}
+                            <img src="{{article.image.url}}" alt="{{article.image.alt}}" class="img-responsive img-rounded">
+                        {% else %}
+                            <i>Ohhhh there's no image to display :(</i>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-10">{{article.content | raw}}</div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                ID #{{article.id}}
+                <div class="tags pull-right">Tags : {% for tag in article.tags %}
+                    <a href="{{ path('tag_blog',{id:tag.id}) }}" class="label label-info">{{tag.title}}</a>
+                {% else %}{{'<i>None :(</i>'}}
+                {% endfor %}</div>
+        </div>
+    </div>
+    {% endfor %}
+
+        {% endblock %}
+            {% block title %}Tags | {{ parent() }}{% endblock %}
+

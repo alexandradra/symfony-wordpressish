@@ -1,0 +1,92 @@
+{% extends ':catalog:layout.html.twig' %}
+{% block body_layout %}
+    {% for message in app.session.flashbag.get('success') %}
+        <p class="alert alert-success">{{ message }}</p>
+    {% endfor %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{product.title}} 
+                <div class="pull-right"><small>Posted on : {{product.date | date('d-m-y')}}</small></div>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-2 text-center">
+                    {% if product.image %}
+                        <img src="{{product.image.url}}" alt="{{product.image.alt}}" class="img-responsive">
+                    {% else %}
+                        <i>Ohhhh there's no image to display :(</i>
+                    {% endif %}
+                </div>
+                <div class="col-md-10">{{product.content | raw}} <br/>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-md-4">ID #{{product.id}} </div>
+                <div class="col-md-4">Rating : {% for rating in product.ratings %} <span class="footer-ratings">{{rating.rating}}</span> {% endfor %}/5</div>
+                <div class="col-md-4"><span class="pull-right">Category : 
+                        <a href="{{ path('catalog_category',{id:product.category.id}) }}" class="label label-info">{{product.category.title}}</a></span></div>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <p><strong>Comments :</strong></p>
+            {% for comments in product.comments %}
+                <p class="comment-content">Posted on {{comments.date | date('d-m-y')}}: {{comments.content}}</p>
+            {% else %}{{'<i>This post does not have comments yet :(</i>'}}
+            {% endfor %}
+        </div>
+        <div class="panel-footer">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}<img src="{{asset('images/animal.gif')}}" style="display:none;" id="loading">
+            {{ form_end(form) }}
+        </div>
+        {#        <div class="panel-footer">
+                    <p><strong>Actions :</strong> </p>
+                    <a href="{{ path('delete_catalog',{id:product.id}) }}" data-toggle="tooltip" data-placement="bottom" title="Delete post"><span class="glyphicon glyphicon-remove"></span></a> &nbsp; &nbsp;
+                    <a href="{{ path('edit_catalog',{id:product.id}) }}" data-toggle="tooltip" data-placement="bottom" title="Edit post"><span class="glyphicon glyphicon-edit"></span></a>
+                </div>#}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('form[name=appbundle_rating]').submit(
+                function (e) {
+                    $('#ajax_error').remove();
+                    e.preventDefault();
+                    $('#loading').show();
+                    $('#appbundle_rating_Submit')
+                            .addClass("disabled")
+                            .prop('disabled', true);
+                    $.ajax({
+                        url: '{{ path('ajax_rating_blog') }}',
+                        method: 'POST',
+                        dataType: 'json',
+                        data: {
+                            id:{{ product.id }} ,
+                            rating: $('form[name=appbundle_rating] select').val()
+                        },
+                        error: function () {
+                            alert('ERRROOOOOORRRRRRR');
+                        },
+                        success: function (data) {
+                            $('#loading').hide();
+                            $('#appbundle_rating_Submit')
+                                    .removeClass("disabled")
+                                    .prop('disabled', false);
+                            if (data.success) {
+                                $('.footer-ratings:first-child').before('<mark>' + data.rating.rating + ' </mark>');
+                            } else {
+                                $('form[name=appbundle_comments] button').after('<div id="ajax_error" class="alert alert-danger" role="alert">Problem 😭</div>')
+                            }
+                        }
+                    });
+                }
+        );
+    </script>
+{% endblock %}

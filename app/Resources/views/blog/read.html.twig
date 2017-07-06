@@ -1,0 +1,115 @@
+{% extends ':blog:layout.html.twig' %}
+{% block body_layout %}
+  {% for message in app.session.flashbag.get('success') %}
+    <p class="alert alert-success">{{ message }}</p>
+  {% endfor %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{article.title}}
+        <div class="pull-right">
+          <small>{{ 'publishedOn' | trans }}
+            {{article.date | date('d-m-y')}}</small>
+        </div>
+      </h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-4 text-center">
+          {% if article.image %}
+            <img src="{{asset('uploads/')~article.image.baseUrl}}" alt="{{article.image.alt}}" class="img-responsive img-rounded">
+          {% else %}
+            <i>Ohhhh there's no image to display :(</i>
+          {% endif %}
+        </div>
+        <div class="col-md-8">{{article.content | raw}}
+          <br/>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-footer">
+      ID #{{article.id}}
+      {% if article.user %}
+        | {{ 'wroteBy' | trans }} :
+        {{article.user.username}}
+      {% endif %}
+      <div class="tags pull-right">Tags :
+        {% for tag in article.tags %}
+          <a href="{{ path('tag_blog',{id:tag.id}) }}" class="label label-info">{{tag.title}}</a>
+        {% else %}{{'<i>None :(</i>'}}
+        {% endfor %}
+
+      </div>
+    </div>
+    <div class="panel-footer panel-footer-comment">
+
+      {% for comments in article.comments %}
+        <p class="comment-content">
+          <span class="user-pseudo">{{comments.user}}
+          </span>
+          on
+          {{comments.date | date('d-m-y')}}:
+          {{comments.content}}</p>
+        <!-- <p class="comment-content"></p> -->
+      {% else %}{{'<i>This post does not have comments yet :(</i>'}}
+      {% endfor %}
+    </div>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+      <div class="panel-footer">
+        {{ form_start(form) }}
+        {{ form_label(form.content, 'Write a comment :') }}
+        {{ form_errors(form.content) }}<img src="{{asset('images/animal.gif')}}" style="display:none;" id="loading">
+        {{ form_widget(form.content) }}
+        {{ form_end(form) }}
+      </div>
+    {% endif %}
+    {% if (article.user == app.user or is_granted('ROLE_SUPER_ADMIN'))%}
+      <div class="panel-footer">
+        <p>
+          <strong>Actions :</strong>
+        </p>
+        <a href="{{ path('delete_blog',{id:article.id}) }}" data-toggle="tooltip" data-placement="bottom" title="{{ 'deletePost' | trans }}">
+          <span class="glyphicon glyphicon-remove"></span>
+        </a>
+        &nbsp; &nbsp;
+        <a href="{{ path('edit_blog',{slug:article.slug}) }}" data-toggle="tooltip" data-placement="bottom" title="{{ 'editPost' | trans }}">
+          <span class="glyphicon glyphicon-edit"></span>
+        </a>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+{% block javascripts %}
+  <script>
+    $('form[name=appbundle_comments]').submit(function(e) {
+      $('#ajax_error').remove();
+      e.preventDefault();
+      $('#loading').show();
+      $('#appbundle_comments_Submit').addClass("disabled").prop('disabled', true);
+      $.ajax({
+        url: '{{ path('ajax_comment_blog') }}',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          id: {{ article.id }},
+          content: $('form[name=appbundle_comments] textarea').val()
+        },
+        error: function() {
+          alert('ERRROOOOOORRRRRRR');
+        },
+        success: function(data) {
+          $('#loading').hide();
+          $('form[name=appbundle_comments] button').removeClass("disabled").prop('disabled', false);
+
+          if (data.success) {
+            $('.panel-footer-comment').prepend('<p class="comment-content"><span class="user-pseudo">' + data.comment.user + '</span> on ' + data.comment.date + ': ' + data.comment.content + '</p>');
+            $("#appbundle_comments_content").val('');
+          } else {
+            $('form[name=appbundle_comments] button').after('<div id="ajax_error" class="alert alert-danger" role="alert">Problem 😭</div>')
+          }
+        }
+      });
+    });
+  </script>
+{% endblock %}

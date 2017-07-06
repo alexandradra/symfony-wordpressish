@@ -1,0 +1,26 @@
+{% extends ':blog:layout.html.twig' %}
+{% block body_layout %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        👋 {{ 'texte.helloworld' | trans }} | {{ 'texte.ciao' | trans }}
+      </h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-1 col-md-offset-5 text-center">
+
+          <a href="{{ path('translation_blog', {_locale:'fr'}) }}"><img src="{{asset('images/fr-flag.png')}}" class="img-responsive" data-toggle="tooltip" data-placement="left" title="Français"></a>
+        </div>
+        <div class="col-md-1 text-center">
+          <a href="{{ path('translation_blog', {_locale:'en'}) }}"><img src="{{asset('images/en-flag.png')}}" class="img-responsive" data-toggle="tooltip" data-placement="right" title="English"></a>
+        </div>
+
+      </div>
+      {{ messageController }} <hr>
+      {{ date|localizeddate('long', 'short') }}
+    </div>
+
+    <div class="panel-footer"></div>
+  </div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends ':catalog:layout.html.twig' %}
+{% block body_layout %}
+
+    <h2 class="text-center">Products on category <span class="btn btn-info" >
+            {{category.title}} <span class="badge">{{count}}</span>
+        </span></h2>
+
+    {% for product in products %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title"><a href="{{ path('detail_catalog',{id:product.id}) }}">{{product.title}}</a>
+                    <small class="pull-right">Posted on : {{product.date | date('d-m-y')}}</small></h2>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-2 text-center">
+                        {% if product.image %}
+                            <img src="{{product.image.url}}" alt="{{product.image.alt}}" class="img-responsive img-rounded">
+                        {% else %}
+                            <i>Ohhhh there's no image to display :(</i>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-10">{{product.content | raw}}</div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                ID #{{product.id}}
+                <div class="tags pull-right">Category :
+                    <a href="{{ path('catalog_category',{id:product.category.id}) }}" class="label label-info">{{category.title}}</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}
+{% block title %}Category | {{ parent() }}{% endblock %}
+

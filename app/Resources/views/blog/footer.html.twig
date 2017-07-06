@@ -1,0 +1,7 @@
+
+<div class="col-md-4"><h2>{{ 'footer.lastPosts' | trans }} :</h2>
+    <ul class="list-unstyled">
+        {% for article in articles %}
+            <li>{{article.title}} <span class="pull-right">{{ 'publishedOn' | trans }}: {{article.date | date('d-m-y')}} | ID #{{article.id}}</span></li>
+            {% endfor %}
+    </ul></div>

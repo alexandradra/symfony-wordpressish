@@ -1,0 +1,5 @@
+<div class="list-group">
+    {% for product in products %}
+        <a type="button" class="list-group-item" href="{{path('detail_catalog',{id:product.id})}}">{{product.title}}</a>
+    {% endfor %}
+</div>

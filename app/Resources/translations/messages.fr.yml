@@ -1,0 +1,19 @@
+message: Bonjour
+publishedOn: Publié le
+wroteBy: Ecrit par
+wroteComment: Déposer un commentaire
+deletePost: Supprimer l'article
+editPost: Editer l'article
+menu:
+  home: Accueil
+  blog: Blog
+  catalog: Catalogue
+  add: Ajouter
+  toLogOut: Se déconnecter
+footer:
+  lastPosts: Derniers articles
+texte:
+  helloworld: Bonjour le monde
+  ciao: Au revoir !
+  perso: Bonjour %name% !
+  plural: Il y a %count% licorne |]1,+Inf] Il y a %count% licornes

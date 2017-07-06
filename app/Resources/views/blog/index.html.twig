@@ -1,0 +1,61 @@
+{% extends ':blog:layout.html.twig' %}
+{#<h1>Index / Page {{ page }}</h1>#}
+{#INDEX : VIEW OF ALL POSTS#}
+{% block body_layout %}
+    {% for message in app.session.flashbag.get('success') %}
+        <p class="alert alert-success">{{ message }}</p>
+    {% endfor %}
+    {% for article in articles %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="panel-title"><a href="{{ path('detail_blog',{slug:article.slug}) }}">{{article.title}}</a>
+                    <div class="pull-right"><small>{{ 'publishedOn' | trans }} {{article.date | date('d-m-y')}}</small></div></h2>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        {% if article.image %}
+                            <img src="{{asset('uploads/')~article.image.baseUrl}}" alt="{{article.image.alt}}" class="img-responsive img-rounded">
+                        {% else %}
+                            <i>Ohhhh there's no image to display :(</i>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-9">
+                        {#                        {{article.extract | raw}}#}
+                        {{article.content | extract}}
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                ID #{{article.id}}
+                <div class="tags pull-right">Tags : {% for tag in article.tags %}
+                    <a href="{{ path('tag_blog',{id:tag.id}) }}" class="label label-info">{{tag.title}}</a>
+                {% else %}{{'<i>None :(</i>'}}
+                {% endfor %}</div>
+        </div>
+    </div>
+    {% endfor %}
+        <nav aria-label="..." class="text-center">
+            <ul class="pagination">
+                <li {% if active<=1 %} class="disabled"{% endif %}>
+                    <a href="{{ path('homepage_blog',{page:active-1}) }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% for i in 1..page %}
+                    <li {% if i == active %} class="active"{% endif %}>
+                        <a href="{{ path('homepage_blog',{ page:i }) }}">{{ i }}<span class="sr-only"></span>
+                        </a>
+                    </li>
+                {% endfor %}
+                <li {% if active>=page %} class="disabled"{% endif %}>
+                    <a href="{{ path('homepage_blog',{page:active+1}) }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+        {% endblock %}
+            {% block title %}Index | {{ parent() }}{% endblock %}

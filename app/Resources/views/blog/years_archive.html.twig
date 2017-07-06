@@ -1,0 +1,11 @@
+
+<div class="col-md-2"><h2>Archive :</h2>
+    <ul class="list-unstyled text-center">
+        {% for year in years %}
+            <li><a href="{{path('archive_blog', {year:year[1]})}}">{{year[1]}}</a></li>
+            {% endfor %}
+    </ul>
+</div>
+
+
+

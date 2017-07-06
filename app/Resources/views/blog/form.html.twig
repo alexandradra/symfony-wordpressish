@@ -1,0 +1,18 @@
+<h3 class="text-center">Je suis le formulaire (poils au derrière)</h3>
+{% for message in app.session.flashbag.get('error') %}
+    <p class="alert alert-danger">
+        {{ message }}
+    </p>
+{% endfor %}
+{#{% form_theme form 'form/bootstrap_3_layout.html.twig' %}#}
+
+{{ form_start(form) }}
+{{ form_label(form.title, 'Title') }}
+{{ form_errors(form.title) }}
+{{ form_widget(form.title) }}
+
+{# {{ form_widget(form.date)}}  #}
+
+{{ form_row(form.date, {'attr':{'class':'js-datepicker'} }) }} {# date sera en premier #}
+
+{{ form_end(form) }}
